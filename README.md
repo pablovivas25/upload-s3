@@ -1,192 +1,129 @@
-📦 Upload S3 + Transferencias API
+# 🚀 NestJS + AWS S3 + PostgreSQL (RDS)
 
-API desarrollada en NestJS para gestionar transferencias y sus comprobantes, incluyendo subida de archivos a AWS S3 y persistencia en PostgreSQL.
+Este proyecto es una API desarrollada con NestJS que permite:
 
-🚀 Tecnologías utilizadas
+- 📂 Subir archivos a AWS S3
+- 🗄️ Persistir datos en PostgreSQL (AWS RDS)
+- ⚙️ Manejo de variables de entorno
+- 🔐 Buenas prácticas para producción
 
-Node.js
+---
 
-NestJS
+## 🧱 Tecnologías utilizadas
 
-TypeORM
+- NestJS
+- TypeORM
+- PostgreSQL (AWS RDS)
+- AWS S3
+- Multer
 
-PostgreSQL
+---
 
-AWS S3
+## ⚙️ Configuración del proyecto
 
-Docker
+### 1. Clonar repositorio
 
-Multer
+```bash
+git clone <repo-url>
+cd <repo>
+```
 
-📂 Estructura del proyecto
-src/
- ├── config/
- ├── modules/
- │    ├── transferencias/
- │    ├── comprobantes/
- │    ├── uploads/
- ├── app.module.ts
- └── main.ts
-📌 Módulos principales
+### 2. Instalar dependencias
 
-Transferencias
-
-Manejo de transferencias
-
-Comprobantes
-
-Relacionados a una transferencia
-
-Guarda la URL del archivo en S3
-
-Uploads
-
-Subida de archivos a AWS S3
-
-🧠 Modelo de datos
-Transferencia
-
-id
-
-monto
-
-fecha
-
-Comprobante
-
-id
-
-url (archivo en S3)
-
-transferencia_id (FK)
-
-👉 Relación:
-Una transferencia puede tener muchos comprobantes
-
-⚙️ Configuración de entorno
-
-Crear archivo .env:
-
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=transfer_app
-DB_HOST=localhost
-
-AWS_ACCESS_KEY=tu_access_key
-AWS_SECRET_KEY=tu_secret_key
-AWS_BUCKET=tu_bucket
-AWS_REGION=us-east-1
-🐳 Base de datos con Docker
-services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_db
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-Levantar DB:
-docker-compose up -d
-▶️ Ejecutar el proyecto
+```bash
 npm install
+```
+
+### 3. Variables de entorno
+
+Crear un archivo `.env`:
+
+```env
+# APP
+PORT=3000
+
+# DATABASE
+DB_HOST=your-rds-endpoint
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=your_password
+DB_NAME=your_db
+
+# AWS
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+AWS_REGION=us-east-1
+AWS_BUCKET=your_bucket_name
+```
+
+---
+
+## 🗄️ Base de datos (PostgreSQL en AWS RDS)
+
+Asegurate de:
+
+- Habilitar acceso público
+- Configurar Security Group para permitir:
+  - Puerto: 5432
+  - Origen: 0.0.0.0/0 (solo para pruebas)
+
+---
+
+## ▶️ Ejecutar el proyecto
+
+```bash
 npm run start:dev
-🔌 Configuración TypeORM
-TypeOrmModule.forRoot({
-  type: 'postgres',
-  host: process.env.DB_HOST,
-  port: 5432,
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  autoLoadEntities: true,
-  synchronize: false, // ⚠️ usar false en entornos reales
-})
-📤 Subida de archivos (S3)
+```
 
-Endpoint:
+---
 
-POST /uploads
-En Postman:
+## 📤 Endpoint de subida de archivos
 
-Method: POST
+### POST /upload
 
-Body: form-data
+**Body (form-data):**
+- key: `file`
+- type: File
 
-Key: file
+---
 
-Type: File
+## 🧪 Probar con Postman
 
-📥 Crear transferencia
-POST /transferencias
+1. Método: POST
+2. URL: http://localhost:3000/upload
+3. Body → form-data
+4. Key: `file` (tipo File)
+5. Seleccionar archivo
+
+---
+
+## ☁️ Ejemplo de respuesta
+
+```json
 {
-  "monto": 1000
+  "url": "https://your-bucket.s3.amazonaws.com/123456-file.png"
 }
-📎 Crear comprobante con archivo
-POST /comprobantes
+```
 
-Body: form-data
+---
 
-file: archivo
+## ⚠️ Notas importantes
 
-transferenciaId: 1
+- ❌ No usar `synchronize: true` en producción
+- 🔐 Usar variables de entorno seguras
+- 🔒 Restringir el acceso del Security Group en producción
 
-⚠️ Problemas comunes
-❌ No se crean tablas
+---
 
-Verificar .env
+## 📌 Próximos pasos
 
-Revisar conexión DB
+- Autenticación con JWT
+- Subida de múltiples archivos
+- Generación de URLs firmadas (S3)
+- Deploy en AWS (EC2 o ECS)
 
-Confirmar autoLoadEntities: true
+---
 
-❌ Error de dependencias (NestJS)
-
-Asegurar TypeOrmModule.forFeature([Entity]) en cada módulo
-
-Importar módulos correctamente
-
-❌ Error AWS S3 (MaxMessageLengthExceeded)
-
-Archivo demasiado grande
-
-Configurar límite en Multer
-
-❌ Error conexión RDS
-
-Revisar Security Group (puerto 5432 abierto)
-
-Habilitar acceso público
-
-Configurar SSL si es requerido
-
-🔄 Migraciones (recomendado)
-
-En producción usar migraciones en lugar de synchronize.
-
-npx typeorm migration:generate
-npx typeorm migration:run
-📌 Mejoras futuras
-
-Autenticación con JWT
-
-Validaciones con class-validator
-
-Manejo de errores centralizado
-
-Logs estructurados
-
-Testing (unit + e2e)
-
-CI/CD
-
-👨‍💻 Autor
+## 👨‍💻 Autor
 
 Pablo Vivas
