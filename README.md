@@ -1,98 +1,192 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+📦 Upload S3 + Transferencias API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API desarrollada en NestJS para gestionar transferencias y sus comprobantes, incluyendo subida de archivos a AWS S3 y persistencia en PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+🚀 Tecnologías utilizadas
 
-## Description
+Node.js
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+NestJS
 
-## Project setup
+TypeORM
 
-```bash
-$ npm install
-```
+PostgreSQL
 
-## Compile and run the project
+AWS S3
 
-```bash
-# development
-$ npm run start
+Docker
 
-# watch mode
-$ npm run start:dev
+Multer
 
-# production mode
-$ npm run start:prod
-```
+📂 Estructura del proyecto
+src/
+ ├── config/
+ ├── modules/
+ │    ├── transferencias/
+ │    ├── comprobantes/
+ │    ├── uploads/
+ ├── app.module.ts
+ └── main.ts
+📌 Módulos principales
 
-## Run tests
+Transferencias
 
-```bash
-# unit tests
-$ npm run test
+Manejo de transferencias
 
-# e2e tests
-$ npm run test:e2e
+Comprobantes
 
-# test coverage
-$ npm run test:cov
-```
+Relacionados a una transferencia
 
-## Deployment
+Guarda la URL del archivo en S3
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Uploads
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Subida de archivos a AWS S3
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+🧠 Modelo de datos
+Transferencia
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+id
 
-## Resources
+monto
 
-Check out a few resources that may come in handy when working with NestJS:
+fecha
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Comprobante
 
-## Support
+id
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+url (archivo en S3)
 
-## Stay in touch
+transferencia_id (FK)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+👉 Relación:
+Una transferencia puede tener muchos comprobantes
 
-## License
+⚙️ Configuración de entorno
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Crear archivo .env:
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=transfer_app
+DB_HOST=localhost
+
+AWS_ACCESS_KEY=tu_access_key
+AWS_SECRET_KEY=tu_secret_key
+AWS_BUCKET=tu_bucket
+AWS_REGION=us-east-1
+🐳 Base de datos con Docker
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+Levantar DB:
+docker-compose up -d
+▶️ Ejecutar el proyecto
+npm install
+npm run start:dev
+🔌 Configuración TypeORM
+TypeOrmModule.forRoot({
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: 5432,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
+  autoLoadEntities: true,
+  synchronize: false, // ⚠️ usar false en entornos reales
+})
+📤 Subida de archivos (S3)
+
+Endpoint:
+
+POST /uploads
+En Postman:
+
+Method: POST
+
+Body: form-data
+
+Key: file
+
+Type: File
+
+📥 Crear transferencia
+POST /transferencias
+{
+  "monto": 1000
+}
+📎 Crear comprobante con archivo
+POST /comprobantes
+
+Body: form-data
+
+file: archivo
+
+transferenciaId: 1
+
+⚠️ Problemas comunes
+❌ No se crean tablas
+
+Verificar .env
+
+Revisar conexión DB
+
+Confirmar autoLoadEntities: true
+
+❌ Error de dependencias (NestJS)
+
+Asegurar TypeOrmModule.forFeature([Entity]) en cada módulo
+
+Importar módulos correctamente
+
+❌ Error AWS S3 (MaxMessageLengthExceeded)
+
+Archivo demasiado grande
+
+Configurar límite en Multer
+
+❌ Error conexión RDS
+
+Revisar Security Group (puerto 5432 abierto)
+
+Habilitar acceso público
+
+Configurar SSL si es requerido
+
+🔄 Migraciones (recomendado)
+
+En producción usar migraciones en lugar de synchronize.
+
+npx typeorm migration:generate
+npx typeorm migration:run
+📌 Mejoras futuras
+
+Autenticación con JWT
+
+Validaciones con class-validator
+
+Manejo de errores centralizado
+
+Logs estructurados
+
+Testing (unit + e2e)
+
+CI/CD
+
+👨‍💻 Autor
+
+Pablo Vivas
